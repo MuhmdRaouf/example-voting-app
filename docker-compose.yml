@@ -9,14 +9,13 @@ services:
     command: python app.py
     depends_on:
       redis:
-        condition: service_healthy 
+        condition: service_healthy
     volumes:
      - ./vote:/app
     ports:
-      - "5000:80"
+      - "31000:80"
     networks:
-      - front-tier
-      - back-tier
+      - redis-tier
 
   result:
     build: ./result
@@ -24,55 +23,51 @@ services:
     command: nodemon server.js
     depends_on:
       db:
-        condition: service_healthy 
+        condition: service_healthy
     volumes:
       - ./result:/app
     ports:
-      - "5001:80"
-      - "5858:5858"
+      - "32000:80"
     networks:
-      - front-tier
-      - back-tier
+      - db-tier
 
   worker:
     build:
       context: ./worker
     depends_on:
       redis:
-        condition: service_healthy 
+        condition: service_healthy
       db:
-        condition: service_healthy 
+        condition: service_healthy
     networks:
-      - back-tier
+      - db-tier
+      - redis-tier
 
   redis:
-    image: redis:5.0-alpine3.10
-    volumes:
-      - "./healthchecks:/healthchecks"
+    image: redis:alpine
     healthcheck:
-      test: /healthchecks/redis.sh
+      test: ["CMD", "redis-cli", "ping"]
       interval: "5s"
     ports: ["6379"]
     networks:
-      - back-tier
+      - redis-tier
 
   db:
-    image: postgres:9.4
+    image: postgres:14-alpine
     environment:
       POSTGRES_USER: "postgres"
-      POSTGRES_PASSWORD: "postgres"
+      POSTGRES_PASSWORD: "password"
     volumes:
       - "db-data:/var/lib/postgresql/data"
-      - "./healthchecks:/healthchecks"
     healthcheck:
-      test: /healthchecks/postgres.sh
+      test: ["CMD", "pg_isready", "--user", "postgres"]
       interval: "5s"
     networks:
-      - back-tier
+      - db-tier
 
 volumes:
   db-data:
 
 networks:
-  front-tier:
-  back-tier:
+  redis-tier:
+  db-tier:

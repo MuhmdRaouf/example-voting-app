@@ -31,11 +31,11 @@ spec:
             - containerPort: 6379
           resources:
             requests:
-              memory: "128Mi"
-              cpu: "0.125"
-            limits:
-              memory: "265Mi"
+              memory: "512Mi"
               cpu: "0.250"
+            limits:
+              memory: "1Gi"
+              cpu: "0.512"
           volumeMounts:
             - mountPath: /data
               name: redis-data

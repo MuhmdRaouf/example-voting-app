@@ -1,14 +1,17 @@
-FROM mcr.microsoft.com/dotnet/core/sdk:3.1 as builder
+FROM mcr.microsoft.com/dotnet/sdk:3.1-bullseye-arm64v8 as builder
 
 WORKDIR /Worker
-COPY src/Worker/Worker.csproj .
+
+COPY ["src/Worker.csproj", "."]
+
 RUN dotnet restore
 
-COPY src/Worker/ .
+COPY ["src/", "."]
+
 RUN dotnet publish -c Release -o /out Worker.csproj
 
-# app image
-FROM mcr.microsoft.com/dotnet/core/runtime:3.1
+# App image
+FROM mcr.microsoft.com/dotnet/runtime:3.1-alpine-arm64v8
 
 WORKDIR /app
 ENTRYPOINT ["dotnet", "Worker.dll"]

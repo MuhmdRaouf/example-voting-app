@@ -1,34 +1,44 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  labels:
-    app: db
-  name: db
+  name: voting-app-db-deployment
   namespace: vote
+  labels:
+    app: voting-app
+    type: db
 spec:
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
-      app: db
+      app: voting-app
+      name: db-pod
   template:
     metadata:
+      name: postgres-pod
       labels:
-        app: db
+        app: voting-app
+        name: db-pod
     spec:
       containers:
-      - image: postgres:9.4
-        name: postgres
-        env:
-        - name: POSTGRES_USER
-          value: postgres
-        - name: POSTGRES_PASSWORD
-          value: postgres
-        ports:
-        - containerPort: 5432
-          name: postgres
-        volumeMounts:
-        - mountPath: /var/lib/postgresql/data
-          name: db-data
+        - name: postgres
+          image: postgres:14-alpine
+          env:
+            - name: POSTGRES_USER
+              value: postgres
+            - name:  POSTGRES_PASSWORD
+              value: password
+          ports:
+            - containerPort: 5432
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/data
+              name: db-data
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "0.125"
+            limits:
+              memory: "265Mi"
+              cpu: "0.250"
       volumes:
-      - name: db-data
-        emptyDir: {} 
+        - name: db-data
+          emptyDir: {}

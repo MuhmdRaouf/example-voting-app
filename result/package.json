@@ -1,21 +1,17 @@
 {
   "name": "result",
   "version": "1.0.0",
-  "description": "",
+  "description": "Kubernetes Example Voting App",
   "main": "server.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "",
+  "author": "Mohammed Abdel Raouf <mohammed@raouf.me>",
   "license": "MIT",
   "dependencies": {
-    "async": "^3.1.0",
-    "body-parser": "^1.19.0",
-    "cookie-parser": "^1.4.4",
-    "express": "^4.17.1",
+    "async": "^3.2.3",
+    "body-parser": "^1.20.0",
+    "cookie-parser": "^1.4.6",
+    "express": "^4.18.1",
     "method-override": "^3.0.0",
-    "pg": "^7.12.1",
-    "socket.io": "^2.2.0",
-    "stoppable": "^1.1.0"
+    "pg": "^8.7.3",
+    "socket.io": "^2.2.0"
   }
 }

@@ -1,9 +1,14 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: vote
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: voting-app-worker-deployment
   namespace: vote
-  labels:  
+  labels:
     app: voting-app
     type: worker
 spec:
